@@ -1,7 +1,6 @@
-const { fstat } = require("fs");
-const path = require("path");
-const fs = require("fs");
-const { create } = require("domain");
+const path = require('path');
+const fs = require('fs');
+const https = require('https')
 
 
 function validateUrl(url) {
@@ -13,7 +12,7 @@ function validateUrl(url) {
 
 const validatePath = (pathUser) => {
   if (path.isAbsolute(pathUser)) {
-    console.log("lo toma como absoluto; ", pathUser);
+    console.log('lo toma como absoluto; ', pathUser);
     return pathUser;
   } else {
     const pathAbsolute = path.resolve(pathUser).normalize();
@@ -22,9 +21,9 @@ const validatePath = (pathUser) => {
 };
 
 const browseDirectory = (pathUser) => {
-  const separator = process.platform === "win32" || process.platform === "win64" ? "\\" : "/";
+  const separator = process.platform === 'win32' || process.platform === 'win64' ? '\\' : '/';
   let filesPath = [];
-  if (fs.statSync(pathUser).isFile() && path.extname(pathUser) === ".md") {
+  if (fs.statSync(pathUser).isFile() && path.extname(pathUser) === '.md') {
     filesPath.push(pathUser);
   } else {
     if (fs.statSync(pathUser).isDirectory()) {
@@ -46,7 +45,7 @@ let objectResult = []; //este será mi objeto resultado
 
 const readMDfiles = (mdFile) => {
   return new Promise((resolve, reject) => {
-    fs.readFile(mdFile, "utf-8", (error, data) => {
+    fs.readFile(mdFile, 'utf-8', (error, data) => {
       //metodo de node que lee archvos
       if (error) return reject(error);
       else {
@@ -73,7 +72,7 @@ const objectLinks = (arrayMD) => Promise.all(arrayMD.map(readMDfiles))
 
     objectResult = urls.map((totalLink) => {
       let index = urls.indexOf(totalLink);
-      const splitUrl = totalLink.split("](");
+      const splitUrl = totalLink.split('](');
       const text = splitUrl[0].slice(1);
       const href = splitUrl[1].slice(0, -1);
 

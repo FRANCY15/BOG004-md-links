@@ -4,8 +4,10 @@
   "description": "Libreria para encontrar archivos markdown, identificar si contiene links y el estado de ellos",
   "main": "mdLinks.js",
   "scripts": {
-    "test": "test",
-    "start": "node index.js"
+    "test": "jest --coverage",
+    "lint": "eslint --fix",
+    "build": "npm run lint && npm run test",
+    "prepublishOnly": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -21,12 +23,17 @@
     "validate",
     "mdLinks"
   ],
+  "devDependencies": {
+    "eslint": "^8.14.0",
+    "jest": "^27.5.1"
+  },
   "author": "Francy Corredor",
   "license": "ISC",
   "bin": {
     "md-links": "./cli.js"
   },
   "dependencies": {
-    "cli-color": "^2.0.2"
+    "cli-color": "^2.0.2",
+    "jest": "^28.1.0"
   }
 }

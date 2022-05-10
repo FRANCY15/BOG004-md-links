@@ -1,80 +1,44 @@
-const userPath = process.argv[2];
-// let validateFromConsole = process.argv[3];
-const optionsUser = process.argv;
-
 const {
-  validateUrl,
   browseDirectory,
   validatePath,
   objectLinks,
+  createObjectValidate,
+  objectWithStats
 } = require("./functions.js");
+
+var clc = require('cli-color');
 
 let response = {
     data: [],
     errors: ''
   }
 
-function mdLinks(path = "", options = { validate: false, stats : '' }) {
-//  const {validate, stats} = options
-  return new Promise((resolve, reject) => {
-    const pathAbsolute = validatePath(userPath);
-    const readDirectory = browseDirectory(pathAbsolute);
-    objectLinks(readDirectory)
-    .then((resolve) => {
-      response.data = resolve;
-    })
-    .then(() => {
-      if (optionsUser.includes("--validate") || optionsUser.includes("--v")) {
-        let urlValidatedList = response.data.map((object) =>
-          validateUrl(object.href)
-            .then((res) => {
-              object.status = res.statusCode;
-              object.ok =
-                res.statusCode >= 200 && res.statusCode <= 399 ? "ok" : "fail";
-            })
-            .catch((error) => {
-              object.status = error.code;
-              object.ok = "fail";
-            })
-        );
-        Promise.all(urlValidatedList).then(() => {
-          resolve(response.data);
-        });
-      } else if (optionsUser.includes("--stats") || optionsUser.includes("--s")) {
-        let filterDataWithHref = response.data.filter((object) =>
-            object.hasOwnProperty("href")
-          );
-
-          let result = {
-            Total: filterDataWithHref.length,
-            Unique: filterDataWithHref.length,
-          };
-          console.table(result);
-      }else if (optionsUser.includes("--francy")) {
-        let filterDataWithHref = response.data.filter((object) =>
-            object.hasOwnProperty("href")
-          );
-        let filterDataWithStatus = response.data.filter((object) =>
-          object.hasOwnProperty( {ok: 'fail'})
-        );
-          let result = {
-            Total: filterDataWithHref.length,
-            Unique: filterDataWithHref.length,
-            Broken: filterDataWithStatus.length,
-          };
-          console.table(result)
-      }else {
-        if (!response.errors) {
-          resolve(response.data);
-        } else {
-          reject(response.errors);
+  function mdLinks(path = "", optionsUser = { validate: false, stats : '' }) {
+    return new Promise((resolve, reject) => {
+      const pathAbsolute = validatePath(path);
+      const readDirectory = browseDirectory(pathAbsolute);
+      objectLinks(readDirectory)
+      .then((resolve) => {
+        response.data = resolve;
+      })
+      .then (() => {
+        if (optionsUser?.validate === "--validate" || optionsUser?.validate === "--v") {
+          createObjectValidate(response.data, optionsUser)          
+        }else if ((optionsUser?.validate !== "--validate" || optionsUser?.validate !== "--v") && (optionsUser?.stats ==="--stats" || optionsUser?.stats === "--s")) {
+            objectWithStats(response.data)
+        }else {
+          if (!response.errors) {
+            console.log(clc.redBright(response.data));
+            resolve(response.data);
+          } else {
+            reject(response.errors);
+          }
         }
-      }
-    })
-  });
-}
+      })
+    });
+  }
 
-mdLinks(userPath, {validate: optionsUser, stats: optionsUser })
-  .then((links) => console.log("links: ", links))
-  .catch(console.error);
+module.exports = {
+  mdLinks
+}
 

@@ -1,18 +1,16 @@
-const path = require('path');
-const fs = require('fs');
-const https = require('https')
-
+const path = require("path");
+const fs = require("fs");
+const https = require("https");
+const colors = require('colors')
 
 function validateUrl(url) {
   return new Promise((resolve, reject) => {
-    https.get(url, res =>  resolve(res))
-      .on('error', e => reject(false));
+    https.get(url, (res) => resolve(res)).on("error", (e) => reject(false));
   });
 }
 
 const validatePath = (pathUser) => {
   if (path.isAbsolute(pathUser)) {
-    console.log('lo toma como absoluto; ', pathUser);
     return pathUser;
   } else {
     const pathAbsolute = path.resolve(pathUser).normalize();
@@ -21,9 +19,10 @@ const validatePath = (pathUser) => {
 };
 
 const browseDirectory = (pathUser) => {
-  const separator = process.platform === 'win32' || process.platform === 'win64' ? '\\' : '/';
+  const separator =
+    process.platform === "win32" || process.platform === "win64" ? "\\" : "/";
   let filesPath = [];
-  if (fs.statSync(pathUser).isFile() && path.extname(pathUser) === '.md') {
+  if (fs.statSync(pathUser).isFile() && path.extname(pathUser) === ".md") {
     filesPath.push(pathUser);
   } else {
     if (fs.statSync(pathUser).isDirectory()) {
@@ -45,7 +44,7 @@ let objectResult = []; //este será mi objeto resultado
 
 const readMDfiles = (mdFile) => {
   return new Promise((resolve, reject) => {
-    fs.readFile(mdFile, 'utf-8', (error, data) => {
+    fs.readFile(mdFile, "utf-8", (error, data) => {
       //metodo de node que lee archvos
       if (error) return reject(error);
       else {
@@ -58,43 +57,92 @@ const readMDfiles = (mdFile) => {
   });
 };
 
-
-const objectLinks = (arrayMD) => Promise.all(arrayMD.map(readMDfiles))
-  .then((data) => {
-    const regExpUrls = /!*\[(.+?)\]\((.+?)\)/gi;
-    data.forEach((item) => {
-      const urlsFound = [...item.fileContent.toString().match(regExpUrls)];
-      urlsFound.forEach((url) => {
-        urls.push(url);
-        paths.push(item.route);
+const objectLinks = (arrayMD) =>
+  Promise.all(arrayMD.map(readMDfiles))
+    .then((data) => {
+      const regExpUrls = /!*\[(.+?)\]\((.+?)\)/gi;
+      data.forEach((item) => {
+        const urlsFound = [...item.fileContent.toString().match(regExpUrls)];
+        urlsFound.forEach((url) => {
+          urls.push(url);
+          paths.push(item.route);
+        });
       });
-    });
 
-    objectResult = urls.map((totalLink) => {
-      let index = urls.indexOf(totalLink);
-      const splitUrl = totalLink.split('](');
-      const text = splitUrl[0].slice(1);
-      const href = splitUrl[1].slice(0, -1);
+      objectResult = urls.map((totalLink) => {
+        let index = urls.indexOf(totalLink);
+        const splitUrl = totalLink.split("](");
+        const text = splitUrl[0].slice(1);
+        const href = splitUrl[1].slice(0, -1);
 
-      return {
-        href,
-        text: text.substring(0, 50),
-        file: paths[index],
+        return {
+          href,
+          text: text.substring(0, 50),
+          file: paths[index],
+        };
+      });
+      return objectResult;
+    })
+    .catch((error) => reject(error));
+
+function createObjectValidate(data, optionsUser) {
+  let urlValidatedList = data.map((object) =>
+    validateUrl(object.href)
+      .then((res) => {
+        object.status = res.statusCode;
+        object.ok =
+          res.statusCode >= 200 && res.statusCode <= 399 ? "ok" : "fail";
+      })
+      .catch((error) => {
+        object.status = error.code;
+        object.ok = "fail";
+      })
+  );
+  Promise.all(urlValidatedList).then(() => {
+    // Para mostrar la tabla con broken se debe esperar a que termine la validacion con .then
+    if (optionsUser.stats === "--s" || optionsUser.stats === "--s") {
+      const dataWithHref = getTotalLinks(data);
+      const dataWithStatus = data.filter(
+        (object) => object.ok === "fail"
+      );
+      unique = getLinksUnique(data);
+
+      result = {
+        Total: dataWithHref.length,
+        Unique: unique.length,
+        Broken: dataWithStatus.length,
       };
-    });
-    return objectResult;
-  })
-  .catch((error) => reject(error))
+      console.table(result);
+    } else {
+      console.log(colors.blue(data)); //pinta aqui
+    }
+  });
+}
 
-  // const prueba = readMDfiles('./DirectorioPrueba/ejemploPrueba.md')
-  // .then(resp => resp)
-  // .catch(resp => resp)
-  
-  // prueba.then(resp => console.log(resp))
+function objectWithStats (data) {
+  const dataWithHref = getTotalLinks(data);
+  const unique = getLinksUnique(data);
+
+  result = {
+    Total: dataWithHref.length,
+    Unique:unique.length,
+  };
+  console.table(result);
+}
+
+function getLinksUnique (data) {
+  return [...new Set(data.map((object) => object.href))]
+}
+
+function getTotalLinks (data) {
+  return data.filter((object) => object.hasOwnProperty("href"))
+}
 
 module.exports = {
-    validateUrl,
-    browseDirectory,
-    validatePath,
-    objectLinks,
-}
+  validateUrl,
+  browseDirectory,
+  validatePath,
+  objectLinks,
+  createObjectValidate,
+  objectWithStats
+};

@@ -10,7 +10,9 @@ function validateUrl(url) {
 }
 
 const validatePath = (pathUser) => {
-  if (path.isAbsolute(pathUser)) {
+  if(pathUser === ''){
+    return console.error('Por favor ingrese una ruta valida');
+  }else if (path.isAbsolute(pathUser)) {
     return pathUser;
   } else {
     const pathAbsolute = path.resolve(pathUser).normalize();
@@ -139,7 +141,6 @@ function getTotalLinks (data) {
 }
 
 module.exports = {
-  validateUrl,
   browseDirectory,
   validatePath,
   objectLinks,

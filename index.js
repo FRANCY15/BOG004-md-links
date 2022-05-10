@@ -6,14 +6,15 @@ const {
   objectWithStats
 } = require("./functions.js");
 
-var clc = require('cli-color');
+const chalk = require('chalk')
+
 
 let response = {
     data: [],
     errors: ''
   }
 
-  function mdLinks(path = "", optionsUser = { validate: false, stats : '' }) {
+  function mdLinks(path = "", optionsUser = { validate: '', stats : '' }) {
     return new Promise((resolve, reject) => {
       const pathAbsolute = validatePath(path);
       const readDirectory = browseDirectory(pathAbsolute);
@@ -26,9 +27,11 @@ let response = {
           createObjectValidate(response.data, optionsUser)          
         }else if ((optionsUser?.validate !== "--validate" || optionsUser?.validate !== "--v") && (optionsUser?.stats ==="--stats" || optionsUser?.stats === "--s")) {
             objectWithStats(response.data)
+        }else if ((optionsUser?.validate === "" && optionsUser?.stats === "")) {
+          console.log(response.data)
         }else {
           if (!response.errors) {
-            console.log(clc.redBright(response.data));
+            console.log(response.data);
             resolve(response.data);
           } else {
             reject(response.errors);

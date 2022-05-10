@@ -30,10 +30,9 @@
   "author": "Francy Corredor",
   "license": "ISC",
   "bin": {
-    "mdLinks": "./cli.js"
+    "md-links": "./cli.js"
   },
   "dependencies": {
-    "chalk": "^4.1.2",
     "cli-color": "^2.0.2",
     "colors": "^1.4.0",
     "jest": "^28.1.0"

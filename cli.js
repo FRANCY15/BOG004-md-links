@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const {mdLinks} = require ('./index.js')
 
 const userPath = process.argv[2];
@@ -9,4 +11,3 @@ const validate = optionsUser.includes('--v') || optionsUser.includes('--validate
 const stats = optionsUser.includes('--s') || optionsUser.includes('--stats') ? '--s' : '';
 
 mdLinks(userPath, {validate, stats})
-

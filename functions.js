@@ -1,7 +1,7 @@
 const path = require("path");
 const fs = require("fs");
 const https = require("https");
-const colors = require('colors')
+const colors = require("colors");
 
 function validateUrl(url) {
   return new Promise((resolve, reject) => {
@@ -10,7 +10,10 @@ function validateUrl(url) {
 }
 
 const validatePath = (pathUser) => {
-  if (path.isAbsolute(pathUser)) {
+  if (pathUser === "") {
+    console.log("Por favor ingrese una ruta valida");
+    process.exit();
+  } else if (path.isAbsolute(pathUser)) {
     return pathUser;
   } else {
     const pathAbsolute = path.resolve(pathUser).normalize();
@@ -24,16 +27,18 @@ const browseDirectory = (pathUser) => {
   let filesPath = [];
   if (fs.statSync(pathUser).isFile() && path.extname(pathUser) === ".md") {
     filesPath.push(pathUser);
-  } else {
-    if (fs.statSync(pathUser).isDirectory()) {
-      const directory = pathUser;
-      let contentDirectory = fs.readdirSync(directory);
-      contentDirectory.forEach((el) => {
-        browseDirectory(pathUser + separator + el).forEach((el) => {
-          filesPath.push(el);
-        });
+  } else if (fs.statSync(pathUser).isDirectory()) {
+    const directory = pathUser;
+    let contentDirectory = fs.readdirSync(directory);
+    contentDirectory.forEach((el) => {
+      browseDirectory(pathUser + separator + el).forEach((el) => {
+        filesPath.push(el);
       });
-    }
+    });
+  }
+  if (filesPath.length === 0) {
+    console.log("No se encontraron archivos markdown");
+    process.exit();
   }
   return filesPath;
 };
@@ -102,9 +107,7 @@ function createObjectValidate(data, optionsUser) {
     // Para mostrar la tabla con broken se debe esperar a que termine la validacion con .then
     if (optionsUser.stats === "--s" || optionsUser.stats === "--s") {
       const dataWithHref = getTotalLinks(data);
-      const dataWithStatus = data.filter(
-        (object) => object.ok === "fail"
-      );
+      const dataWithStatus = data.filter((object) => object.ok === "fail");
       unique = getLinksUnique(data);
 
       result = {
@@ -119,23 +122,23 @@ function createObjectValidate(data, optionsUser) {
   });
 }
 
-function objectWithStats (data) {
+function objectWithStats(data) {
   const dataWithHref = getTotalLinks(data);
   const unique = getLinksUnique(data);
 
   result = {
     Total: dataWithHref.length,
-    Unique:unique.length,
+    Unique: unique.length,
   };
   console.table(result);
 }
 
-function getLinksUnique (data) {
-  return [...new Set(data.map((object) => object.href))]
+function getLinksUnique(data) {
+  return [...new Set(data.map((object) => object.href))];
 }
 
-function getTotalLinks (data) {
-  return data.filter((object) => object.hasOwnProperty("href"))
+function getTotalLinks(data) {
+  return data.filter((object) => object.hasOwnProperty("href"));
 }
 
 module.exports = {
@@ -144,5 +147,5 @@ module.exports = {
   validatePath,
   objectLinks,
   createObjectValidate,
-  objectWithStats
+  objectWithStats,
 };

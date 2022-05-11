@@ -28,8 +28,7 @@ let response = {
             objectWithStats(response.data)
         }else {
           if (!response.errors) {
-            console.log(clc.redBright(response.data));
-            resolve(response.data);
+            console.log((response.data))
           } else {
             reject(response.errors);
           }
@@ -41,4 +40,3 @@ let response = {
 module.exports = {
   mdLinks
 }
-

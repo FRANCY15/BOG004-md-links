@@ -15,7 +15,7 @@
 Esta librería busca principalmente apoyar los proyectos, en la lectura e identificación de archivos markdown, y dentro de ellos validar el código de estado de los links o urls existentes.
 
 
-![ObjetoUrlValidada](https://user-images.githubusercontent.com/110297/42118443-b7a5f1f0-7bc8-11e8-96ad-9cc5593715a6.jpg)
+![ObjetoUrlValidada](https://github.com/FRANCY15/BOG004-md-links/blob/mdLinks/img/objetoUrlValidada.PNG)
 
 ## 2. **Instalación**
 
@@ -35,19 +35,19 @@ A continuación, para poder usarlo se debe importar a través de require. Por ej
 
 - [ ] `' '` no ingresa ninguna opción,por lo cual la función no realiza validación, por lo cual imprime solo el texto del link encontrado, ubicación del archivo y url. Retorna un objeto como el siguiente: 
 
-![ObjetoSinOptions](https://user-images.githubusercontent.com/110297/42118443-b7a5f1f0-7bc8-11e8-96ad-9cc5593715a6.jpg)
+![ObjetoSinOptions](https://github.com/FRANCY15/BOG004-md-links/blob/mdLinks/img/objetoSinValidacion.PNG)
 
 - [ ] `'--validate' || '--v'` le solicita a la función realizar la validación de los links encontrados, por lo cual imprime el texto del link encontrado, ubicación del archivo, url, código de estado, y ok. Retorna un objeto como el siguiente:
 
-![ObjetoConValidate](https://user-images.githubusercontent.com/110297/42118443-b7a5f1f0-7bc8-11e8-96ad-9cc5593715a6.jpg)
+![ObjetoConValidate](https://github.com/FRANCY15/BOG004-md-links/blob/mdLinks/img/objetoUrlValidada.PNG)
 
 - [ ] `'--stats' || '--s'` le solicita a la función realizar imprimir las estadísticas, por lo cual imprime Total de links encontrados, y cantidad de links no repetidos. Retorna un objeto como el siguiente:
 
-![ObjetoConStats](https://user-images.githubusercontent.com/110297/42118443-b7a5f1f0-7bc8-11e8-96ad-9cc5593715a6.jpg)
+![ObjetoConStats](https://github.com/FRANCY15/BOG004-md-links/blob/mdLinks/img/objetoStats.PNG)
 
 - [ ] `'--stats' && '--validate'` le solicita a la función realizar las estadísticas y la validación, por lo cual imprime Total de links encontrados, cantidad de links no repetidos, y cuantos links rotos se encontrarón. Retorna un objeto como el siguiente:
 
-![ObjetoConStats&Validate](https://user-images.githubusercontent.com/110297/42118443-b7a5f1f0-7bc8-11e8-96ad-9cc5593715a6.jpg)
+![ObjetoConStats&Validate](https://github.com/FRANCY15/BOG004-md-links/blob/mdLinks/img/objetoStatsValidate.PNG)
 
 <p> Ejecución:
 

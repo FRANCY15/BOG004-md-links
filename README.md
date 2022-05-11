@@ -1,4 +1,4 @@
-# **Markdown Librería**
+# **MDLinks Librería**
 
 ## **Índice**
 
@@ -33,7 +33,7 @@ A continuación, para poder usarlo se debe importar a través de require. Por ej
 
 <p> Options:
 
-- [ ] `' '` no ingresa ninguna opción,por lo cual la función no realiza validación, por lo cual imprime solo el texto del link encontrado, ubicación del archivo y url. Retorna un objeto como el siguiente: 
+- [ ] `' '` no ingresa ninguna opción, de esta manera la función no realiza validación, por lo cual imprime solo el texto del link encontrado, ubicación del archivo y url. Retorna un objeto como el siguiente: 
 
 ![ObjetoSinOptions](https://github.com/FRANCY15/BOG004-md-links/blob/mdLinks/img/objetoSinValidacion.PNG)
 
@@ -56,6 +56,8 @@ A continuación, para poder usarlo se debe importar a través de require. Por ej
 - [ ] Desde la la terminal de Git Bash se debe ejecutar el comando `mdLinks <ruta del archivo o diredtorio a examinar> <options>`
 
 ### **Desarrollo de la librería**
+
+<p> 
 
 ### **Creadora**
 

@@ -1,11 +1,6 @@
 const mdLinks = require('../index.js').mdLinks;
 
-
-describe('mdLinks', () => {
-
-  it("Al ejecutar la función mdLinks con option false, la función retorna solo el objeto con 3 keys: href, text, file", () => {
-
-    let pathTest = 'DirectorioPrueba\\carpetaUno\\directorio.md\\prueba.md'
+let pathTest = 'DirectorioPrueba\\carpetaUno\\directorio.md\\prueba.md'
     
     let objectExpect = [{
       href: 'https://www.youtube.com/watch?v=_Kqtj14rxes',
@@ -18,10 +13,15 @@ describe('mdLinks', () => {
       file: "C:\\Users\\LABORATORIA\\OneDrive\\Escritorio\\LABORATORIA\\BOG004-md-links\\DirectorioPrueba\\carpetaUno\\directorio.md\\prueba.md"
     },
     ]
-    
-    return mdLinks(pathTest, {validate: false}).then((arrayObjects)=> {
+
+describe('mdLinks', () => {
+
+  test("Al ejecutar la función mdLinks con option false, la función retorna solo el objeto con 3 keys: href, text, file", async () => {
+
+    const arrayObjects = await mdLinks(pathTest, {validate: false}).then((arrayObj)=> {
       expect(arrayObjects).toStrictEqual(objectExpect)
-    })
+    })   
+    
 });
 
 // it("Al ejecutar la función mdLinks con option true, la función retorna solo el objeto con 5 keys: href, text, file, status, ok", () => {

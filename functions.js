@@ -67,11 +67,13 @@ const objectLinks = (arrayMD) =>
     .then((data) => {
       const regExpUrls = /!*\[(.+?)\]\((.+?)\)/gi;
       data.forEach((item) => {
-        const urlsFound = [...item.fileContent.toString().match(regExpUrls)];
-        urlsFound.forEach((url) => {
-          urls.push(url);
-          paths.push(item.route);
-        });
+        const urlsFound = item.fileContent.match(regExpUrls)
+        if(urlsFound){
+          urlsFound.forEach((url) => {
+            urls.push(url);
+            paths.push(item.route);
+          })
+        }
       });
 
       objectResult = urls.map((totalLink) => {
@@ -88,7 +90,7 @@ const objectLinks = (arrayMD) =>
       });
       return objectResult;
     })
-    .catch((error) => reject(error));
+    .catch((error) => console.error(error));
 
 function createObjectValidate(data, optionsUser) {
   let urlValidatedList = data.map((object) =>

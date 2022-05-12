@@ -51,9 +51,11 @@ A continuación, para poder usarlo se debe importar a través de require. Por ej
 
 <p> Ejecución:
 
-- [ ] Desde la powerShell se debe ejecutar el comando `node cli.js <ruta del archivo o diredtorio a examinar> <options>`
+### **El usuario debe ingresar la ya sea relativa o absoluta entre comillas**
 
-- [ ] Desde la la terminal de Git Bash se debe ejecutar el comando `mdLinks <ruta del archivo o diredtorio a examinar> <options>`
+- [ ] Desde la powerShell se debe ejecutar el comando `node cli.js <'ruta del archivo o diredtorio a examinar'> <options>`
+
+- [ ] Desde la la terminal de Git Bash se debe ejecutar el comando `mdLinks <'ruta del archivo o diredtorio a examinar'> <options>`
 
 ### **Desarrollo de la librería**
 

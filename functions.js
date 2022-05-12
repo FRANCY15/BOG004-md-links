@@ -1,7 +1,7 @@
 const path = require("path");
 const fs = require("fs");
 const https = require("https");
-const colors = require("colors");
+const clc = require("colors");
 
 function validateUrl(url) {
   return new Promise((resolve, reject) => {
@@ -10,9 +10,9 @@ function validateUrl(url) {
 }
 
 const validatePath = (pathUser) => {
-  if (pathUser === "") {
-    console.log("Por favor ingrese una ruta valida");
-    process.exit();
+  if(!fs.existsSync(pathUser)){
+    console.log(clc.cyan('❈ ❇ ✻ La ruta ingresada es válida o no existe ✼ ❇ ❈'))
+    process.exit()
   } else if (path.isAbsolute(pathUser)) {
     return pathUser;
   } else {
@@ -36,8 +36,8 @@ const browseDirectory = (pathUser) => {
       });
     });
   }
-  if (filesPath.length === 0) {
-    console.log("No se encontraron archivos markdown");
+  else if (filesPath.length === 0) {
+    console.log(clc.magenta("⁂ ⁑ ⁎ No se encontraron archivos markdown ⁎ ⁑ ⁂"));
     process.exit();
   }
   return filesPath;
@@ -105,9 +105,9 @@ function createObjectValidate(data, optionsUser) {
         object.ok = "fail";
       })
   );
-  Promise.all(urlValidatedList).then(() => {
+  return Promise.all(urlValidatedList).then(() => {
     // Para mostrar la tabla con broken se debe esperar a que termine la validacion con .then
-    if (optionsUser.stats === "--s" || optionsUser.stats === "--s") {
+    if (optionsUser.stats) {
       const dataWithHref = getTotalLinks(data);
       const dataWithStatus = data.filter((object) => object.ok === "fail");
       unique = getLinksUnique(data);
@@ -117,9 +117,10 @@ function createObjectValidate(data, optionsUser) {
         Unique: unique.length,
         Broken: dataWithStatus.length,
       };
-      console.table(result);
+      return result;
     } else {
-      console.log(colors.blue(data)); //pinta aqui
+      return data;
+      // console.log(clc.yellow('✾ ✽ ✼ ✻ Este es el resultado de la validación ✻ ✼ ✽ ✾', (clc.blue(data)))); //pinta aqui
     }
   });
 }
@@ -132,7 +133,7 @@ function objectWithStats(data) {
     Total: dataWithHref.length,
     Unique: unique.length,
   };
-  console.table(result);
+  return result
 }
 
 function getLinksUnique(data) {
@@ -143,6 +144,7 @@ function getTotalLinks(data) {
   return data.filter((object) => object.hasOwnProperty("href"));
 }
 
+
 module.exports = {
   validateUrl,
   browseDirectory,
@@ -150,4 +152,5 @@ module.exports = {
   objectLinks,
   createObjectValidate,
   objectWithStats,
+
 };

@@ -51,7 +51,7 @@ A continuación, para poder usarlo se debe importar a través de require. Por ej
 
 <p> Ejecución:
 
-### **El usuario debe ingresar la ya sea relativa o absoluta entre comillas**
+### **El usuario debe ingresar la ruta ya sea relativa o absoluta entre comillas**
 
 - [ ] Desde la powerShell se debe ejecutar el comando `node cli.js <'ruta del archivo o diredtorio a examinar'> <options>`
 
@@ -59,7 +59,9 @@ A continuación, para poder usarlo se debe importar a través de require. Por ej
 
 ### **Desarrollo de la librería**
 
-<p> 
+<p> Para el desarrollo del proyecto se estableció una ruta de trabajo, a través de un flujograma de procesos, el cual se puede observar a continuación.
+
+[Flujograma de trabajo - MDLinks](https://lucid.app/lucidchart/59d4dea8-a682-469e-98ea-2185e979fc24/edit?invitationId=inv_f0ed0629-4644-4208-bdb8-51b670f1b30a)
 
 ### **Creadora**
 

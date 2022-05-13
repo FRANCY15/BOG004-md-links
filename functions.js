@@ -43,10 +43,6 @@ const browseDirectory = (pathUser) => {
   return filesPath;
 };
 
-let urls = []; //array para enlistar los links
-let paths = []; //array para enlistar la ruta de los archivos.md
-let objectResult = []; //este será mi objeto resultado
-
 const readMDfiles = (mdFile) => {
   return new Promise((resolve, reject) => {
     fs.readFile(mdFile, "utf-8", (error, data) => {
@@ -62,8 +58,13 @@ const readMDfiles = (mdFile) => {
   });
 };
 
-const objectLinks = (arrayMD) =>
-  Promise.all(arrayMD.map(readMDfiles))
+const objectLinks = (arrayMD) => {
+
+let urls = []; //array para enlistar los links
+let paths = []; //array para enlistar la ruta de los archivos.md
+let objectResult = []; //este será mi objeto resultado
+
+  return Promise.all(arrayMD.map(readMDfiles))
     .then((data) => {
       const regExpUrls = /!*\[(.+?)\]\((.+?)\)/gi;
       data.forEach((item) => {
@@ -91,6 +92,7 @@ const objectLinks = (arrayMD) =>
       return objectResult;
     })
     .catch((error) => console.error(error));
+}
 
 function createObjectValidate(data, optionsUser) {
   let urlValidatedList = data.map((object) =>

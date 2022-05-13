@@ -22,10 +22,6 @@ Esta librería busca principalmente apoyar los proyectos, en la lectura e identi
 Para la instalación de la librería se debe digitar el siguiente comando a través de la terminal de su editor de código, preferiblemente desde la terminal de Git Bash.
 
 `npm i md-links.francy`
-
-A continuación, para poder usarlo se debe importar a través de require. Por ejemplo,
-
-`const mdLinks = require('mdLinks')`
  
 ## 3. **Guía de uso**
 

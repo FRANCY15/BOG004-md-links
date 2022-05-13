@@ -25,7 +25,9 @@
   ],
   "devDependencies": {
     "eslint": "^8.15.0",
-    "jest": "^27.5.1"
+    "jest": "^27.5.1",
+    "webpack": "^5.72.1",
+    "webpack-cli": "^4.9.2"
   },
   "author": "Francy Corredor",
   "license": "ISC",

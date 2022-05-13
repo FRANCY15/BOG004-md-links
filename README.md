@@ -19,7 +19,7 @@ Esta librería busca principalmente apoyar los proyectos, en la lectura e identi
 
 ## 2. **Instalación**
 
-Para la instalación de la librería se debe digitar el siguiente comando a través de la terminal de su editor de código, preferiblemente desde la terminal de Git Bash.
+Para la instalación de la librería se debe digitar el siguiente comando a través de la terminal de su editor de código, desde la terminal de Git Bash.
 
 `npm i md-links.francy`
  
@@ -48,8 +48,6 @@ Para la instalación de la librería se debe digitar el siguiente comando a trav
 <p> Ejecución:
 
 ### **El usuario debe ingresar la ruta ya sea relativa o absoluta entre comillas**
-
-- [ ] Desde la powerShell se debe ejecutar el comando `node cli.js <'ruta del archivo o diredtorio a examinar'> <options>`
 
 - [ ] Desde la la terminal de Git Bash se debe ejecutar el comando `mdLinks <'ruta del archivo o diredtorio a examinar'> <options>`
 

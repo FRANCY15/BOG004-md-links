@@ -1,20 +1,19 @@
+const cliColor = require("cli-color");
 const {
   browseDirectory,
   validatePath,
   objectLinks,
   createObjectValidate,
-  objectWithStats
+  objectWithStats,
+
 } = require("./functions.js");
-
-const chalk = require('chalk')
-
 
 let response = {
     data: [],
     errors: ''
   }
 
-  function mdLinks(path = "", optionsUser = { validate: '', stats : '' }) {
+  function mdLinks(path = "", optionsUser = { validate: false, stats : false }) {
     return new Promise((resolve, reject) => {
       const pathAbsolute = validatePath(path);
       const readDirectory = browseDirectory(pathAbsolute);
@@ -23,16 +22,14 @@ let response = {
         response.data = resolve;
       })
       .then (() => {
-        if (optionsUser?.validate === "--validate" || optionsUser?.validate === "--v") {
-          createObjectValidate(response.data, optionsUser)          
-        }else if ((optionsUser?.validate !== "--validate" || optionsUser?.validate !== "--v") && (optionsUser?.stats ==="--stats" || optionsUser?.stats === "--s")) {
-            objectWithStats(response.data)
-        }else if ((optionsUser?.validate === "" && optionsUser?.stats === "")) {
-          console.log(response.data)
+        if (optionsUser.validate) {
+          resolve(createObjectValidate(response.data, optionsUser)
+          .then((resp) => resp))
+        }else if (optionsUser.stats) {
+            resolve(objectWithStats(response.data))
         }else {
           if (!response.errors) {
-            console.log(response.data);
-            resolve(response.data);
+            resolve(response.data)
           } else {
             reject(response.errors);
           }
@@ -44,4 +41,3 @@ let response = {
 module.exports = {
   mdLinks
 }
-

@@ -1,7 +1,7 @@
 const path = require("path");
 const fs = require("fs");
 const https = require("https");
-const colors = require('colors')
+const clc = require("colors");
 
 function validateUrl(url) {
   return new Promise((resolve, reject) => {
@@ -10,9 +10,10 @@ function validateUrl(url) {
 }
 
 const validatePath = (pathUser) => {
-  if(pathUser === ''){
-    return console.error('Por favor ingrese una ruta valida');
-  }else if (path.isAbsolute(pathUser)) {
+  if(!fs.existsSync(pathUser)){
+    console.log(clc.cyan('❈ ❇ ✻ La ruta ingresada es válida o no existe ✼ ❇ ❈'))
+    process.exit()
+  } else if (path.isAbsolute(pathUser)) {
     return pathUser;
   } else {
     const pathAbsolute = path.resolve(pathUser).normalize();
@@ -26,23 +27,21 @@ const browseDirectory = (pathUser) => {
   let filesPath = [];
   if (fs.statSync(pathUser).isFile() && path.extname(pathUser) === ".md") {
     filesPath.push(pathUser);
-  } else {
-    if (fs.statSync(pathUser).isDirectory()) {
-      const directory = pathUser;
-      let contentDirectory = fs.readdirSync(directory);
-      contentDirectory.forEach((el) => {
-        browseDirectory(pathUser + separator + el).forEach((el) => {
-          filesPath.push(el);
-        });
+  } else if (fs.statSync(pathUser).isDirectory()) {
+    const directory = pathUser;
+    let contentDirectory = fs.readdirSync(directory);
+    contentDirectory.forEach((el) => {
+      browseDirectory(pathUser + separator + el).forEach((el) => {
+        filesPath.push(el);
       });
-    }
+    });
+  }
+  else if (filesPath.length === 0) {
+    console.log(clc.magenta("⁂ ⁑ ⁎ No se encontraron archivos markdown ⁎ ⁑ ⁂"));
+    process.exit();
   }
   return filesPath;
 };
-
-let urls = []; //array para enlistar los links
-let paths = []; //array para enlistar la ruta de los archivos.md
-let objectResult = []; //este será mi objeto resultado
 
 const readMDfiles = (mdFile) => {
   return new Promise((resolve, reject) => {
@@ -59,16 +58,23 @@ const readMDfiles = (mdFile) => {
   });
 };
 
-const objectLinks = (arrayMD) =>
-  Promise.all(arrayMD.map(readMDfiles))
+const objectLinks = (arrayMD) => {
+
+let urls = []; //array para enlistar los links
+let paths = []; //array para enlistar la ruta de los archivos.md
+let objectResult = []; //este será mi objeto resultado
+
+  return Promise.all(arrayMD.map(readMDfiles))
     .then((data) => {
       const regExpUrls = /!*\[(.+?)\]\((.+?)\)/gi;
       data.forEach((item) => {
-        const urlsFound = [...item.fileContent.toString().match(regExpUrls)];
-        urlsFound.forEach((url) => {
-          urls.push(url);
-          paths.push(item.route);
-        });
+        const urlsFound = item.fileContent.match(regExpUrls)
+        if(urlsFound){
+          urlsFound.forEach((url) => {
+            urls.push(url);
+            paths.push(item.route);
+          })
+        }
       });
 
       objectResult = urls.map((totalLink) => {
@@ -85,7 +91,8 @@ const objectLinks = (arrayMD) =>
       });
       return objectResult;
     })
-    .catch((error) => reject(error));
+    .catch((error) => console.error(error));
+}
 
 function createObjectValidate(data, optionsUser) {
   let urlValidatedList = data.map((object) =>
@@ -100,13 +107,11 @@ function createObjectValidate(data, optionsUser) {
         object.ok = "fail";
       })
   );
-  Promise.all(urlValidatedList).then(() => {
+  return Promise.all(urlValidatedList).then(() => {
     // Para mostrar la tabla con broken se debe esperar a que termine la validacion con .then
-    if (optionsUser.stats === "--s" || optionsUser.stats === "--s") {
+    if (optionsUser.stats) {
       const dataWithHref = getTotalLinks(data);
-      const dataWithStatus = data.filter(
-        (object) => object.ok === "fail"
-      );
+      const dataWithStatus = data.filter((object) => object.ok === "fail");
       unique = getLinksUnique(data);
 
       result = {
@@ -114,36 +119,40 @@ function createObjectValidate(data, optionsUser) {
         Unique: unique.length,
         Broken: dataWithStatus.length,
       };
-      console.table(result);
+      return result;
     } else {
-      console.log(colors.blue(data)); //pinta aqui
+      return data;
+      // console.log(clc.yellow('✾ ✽ ✼ ✻ Este es el resultado de la validación ✻ ✼ ✽ ✾', (clc.blue(data)))); //pinta aqui
     }
   });
 }
 
-function objectWithStats (data) {
+function objectWithStats(data) {
   const dataWithHref = getTotalLinks(data);
   const unique = getLinksUnique(data);
 
   result = {
     Total: dataWithHref.length,
-    Unique:unique.length,
+    Unique: unique.length,
   };
-  console.table(result);
+  return result
 }
 
-function getLinksUnique (data) {
-  return [...new Set(data.map((object) => object.href))]
+function getLinksUnique(data) {
+  return [...new Set(data.map((object) => object.href))];
 }
 
-function getTotalLinks (data) {
-  return data.filter((object) => object.hasOwnProperty("href"))
+function getTotalLinks(data) {
+  return data.filter((object) => object.hasOwnProperty("href"));
 }
+
 
 module.exports = {
+  validateUrl,
   browseDirectory,
   validatePath,
   objectLinks,
   createObjectValidate,
-  objectWithStats
+  objectWithStats,
+
 };

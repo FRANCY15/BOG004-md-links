@@ -1,5 +1,5 @@
 {
-  "name": "md-links",
+  "name": "md-links.francy",
   "version": "1.0.0",
   "description": "Libreria para encontrar archivos markdown, identificar si contiene links y el estado de ellos",
   "main": "index.js",
